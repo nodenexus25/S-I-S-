@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AudienceType {
+  PARENT
+  STUDENT
+  ALUMNI
+  VISITOR
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CLOSED
+}
+
+model Page {
+  id             String     @id @default(cuid())
+  title          String
+  slug           String     @unique
+  navigationLabel String?
+  excerpt        String?
+  seoTitle       String?
+  seoDescription String?
+  heroTitle      String?
+  heroSubtitle   String?
+  body           Json?
+  template       String?
+  status         PageStatus @default(DRAFT)
+  publishedAt    DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model NewsPost {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  excerpt         String?
+  body            Json?
+  coverImageUrl   String?
+  coverImageAlt   String?
+  category        String?
+  publishedAt     DateTime?
+  isFeatured      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Testimonial {
+  id             String       @id @default(cuid())
+  quote          String
+  authorName     String
+  authorRole     String?
+  audienceType   AudienceType @default(PARENT)
+  attribution    String?
+  isPlaceholder  Boolean      @default(true)
+  isPublished    Boolean      @default(false)
+  sortOrder      Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model StaffMember {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  fullName       String
+  roleTitle      String
+  department     String?
+  bio            Json?
+  portraitUrl    String?
+  portraitAlt    String?
+  email          String?
+  isLeadership   Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Wing {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  shortLabel     String?
+  summary        String?
+  overview       Json?
+  heroImageUrl   String?
+  heroImageAlt   String?
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model GalleryImage {
+  id             String   @id @default(cuid())
+  title          String?
+  altText        String
+  imageUrl       String
+  caption        String?
+  category       String?
+  sortOrder      Int      @default(0)
+  isPublished    Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model EnquiryLead {
+  id                String     @id @default(cuid())
+  parentName        String
+  email             String?
+  phone             String
+  studentName       String?
+  interestedGrade   String?
+  academicSession   String?
+  message           String?
+  source            String?
+  status            LeadStatus @default(NEW)
+  contactedAt       DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
